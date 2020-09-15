@@ -1,0 +1,16 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    background: lightcoral;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+#canv {
+    background: whitesmoke;
+    margin-top: 15vh;
+    border: solid 2px burlywood;
+}
