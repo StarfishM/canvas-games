@@ -1,6 +1,6 @@
 (function () {
-    const canv = document.getElementById('canv');
-    const ctx = canv.getContext('2d');
+    const canv = document.getElementById("canv");
+    const ctx = canv.getContext("2d");
 
     // startposition and moving factors of the ball
     let x = canv.width / 2;
@@ -31,7 +31,7 @@
         for (var r = 0; r < bRowTotal; r++) {
             bricks[c][r] = { x: 0, y: 0, status: 1 };
         }
-        console.log('bricks:', bricks);
+        console.log("bricks:", bricks);
     }
 
     // user keys
@@ -41,20 +41,20 @@
     let score = 0;
 
     //event listeners
-    document.addEventListener('keydown', keyDownHandler, false);
-    document.addEventListener('keyup', keyUpHandler, false);
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
 
     function keyDownHandler(e) {
-        if (e.keyCode === 37 || e.key === 'ArrowLeft') {
+        if (e.keyCode === 37 || e.key === "ArrowLeft") {
             leftDown = true;
-        } else if (e.keyCode === 39 || e.key === 'ArrowRight') {
+        } else if (e.keyCode === 39 || e.key === "ArrowRight") {
             rightDown = true;
         }
     }
     function keyUpHandler(e) {
-        if (e.keyCode === 37 || e.key === 'ArrowLeft') {
+        if (e.keyCode === 37 || e.key === "ArrowLeft") {
             leftDown = false;
-        } else if (e.keyCode === 39 || e.key === 'ArrowRight') {
+        } else if (e.keyCode === 39 || e.key === "ArrowRight") {
             rightDown = false;
         }
     }
@@ -81,15 +81,15 @@
     }
 
     function drawScore() {
-        ctx.font = '16px Arial';
-        ctx.fillStyle = '#0095DD';
-        ctx.fillText('Score: ' + score, 8, 20);
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("Score: " + score, 8, 20);
     }
 
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'pink';
+        ctx.fillStyle = "pink";
         ctx.fill();
         ctx.closePath();
     }
@@ -102,7 +102,7 @@
             paddleWidth,
             paddleHeight
         );
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = "green";
         ctx.fill();
         ctx.closePath();
     }
@@ -119,7 +119,7 @@
                     bricks[c][r].y = brickY;
                     ctx.beginPath();
                     ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                    ctx.fillStyle = 'crimson';
+                    ctx.fillStyle = "crimson";
                     ctx.fill();
                     ctx.closePath();
                 }
@@ -134,11 +134,14 @@
         drawBricks();
         collisionDetection();
         drawScore();
-        // check if the ball has reached the side walls
+
         if (score == bRowTotal * bColumnTotal) {
-            console.log('WIN!!!!');
+            console.log("WIN!!!!");
+            alert("you just won 🎉");
         }
+        // check if the ball has reached the side walls
         if (x + dx > canv.width - ballRadius || x + dx < ballRadius) {
+            console.log("hitting a side");
             dx = -dx;
         }
         // we have reached the top
@@ -147,7 +150,15 @@
         } else if (y + dy > canv.height - ballRadius - paddleHeight) {
             // check if the paddle is there to bounce the ball back
             if (x >= paddleX - 15 && x <= paddleX + paddleWidth + 15) {
-                dy = -dy;
+                console.log("sending ball somewhere else");
+                var randomAngleShift = Math.random() * (0.5 - 0.1 + 1) + 0.1;
+                console.log("randomAngleShift:", randomAngleShift);
+                dy = -dy - randomAngleShift;
+                console.log("dy:", dy);
+                if (dy <= -6) {
+                    dy = -3;
+                    console.log("getting mighty fast");
+                }
             } else {
                 alert(`You did not catch the ball at the bottom
                 L O O S E R`);
