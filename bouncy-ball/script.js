@@ -17,7 +17,7 @@
     let paddleX = (canv.width - paddleWidth) / 2;
 
     //brick specs
-    let bRowTotal = 3;
+    let bRowTotal = 6;
     let bColumnTotal = 5;
     const brickWidth = 100;
     const brickHeight = 20;
@@ -25,14 +25,43 @@
     const brickOffsetTop = 30;
     const brickOffsetLeft = 30;
 
+    //add statusCount to brick
+    const cutOffOne = 5;
+    const cutOffTwo = 3;
+
+    // statCounts
+    const layerOne = 1;
+    const layerTwo = 2;
+    const layerThree = 3;
+
+    // calculate winning score:
+    const colFirstLayerScore = Math.floor((bRowTotal / cutOffOne) * layerOne);
+    const colSecondLayerScore = Math.floor((bRowTotal / cutOffTwo) * layerTwo);
+    const colThirdLayerScore =
+        (bRowTotal -
+            Math.floor(bRowTotal / cutOffOne) -
+            Math.floor(bRowTotal / cutOffTwo)) *
+        layerThree;
+    const oneColTotalScore =
+        colFirstLayerScore + colSecondLayerScore + colThirdLayerScore;
+    console.log("oneColTotalScore", oneColTotalScore);
+    const winningScore = oneColTotalScore * bColumnTotal;
+    console.log("winningScore", winningScore);
+
     let bricks = [];
     for (let c = 0; c < bColumnTotal; c++) {
         bricks[c] = [];
         for (var r = 0; r < bRowTotal; r++) {
-            bricks[c][r] = { x: 0, y: 0, status: 1 };
+            if (r >= cutOffOne) {
+                bricks[c][r] = { x: 0, y: 0, status: layerOne };
+            } else if (r >= cutOffTwo) {
+                bricks[c][r] = { x: 0, y: 0, status: layerTwo };
+            } else {
+                bricks[c][r] = { x: 0, y: 0, status: layerThree };
+            }
         }
-        console.log("bricks:", bricks);
     }
+    console.log("brick:", bricks);
 
     // user keys
     let rightDown = false;
@@ -63,8 +92,9 @@
         for (let c = 0; c < bColumnTotal; c++) {
             for (let r = 0; r < bRowTotal; r++) {
                 let b = bricks[c][r];
-                if (b.status == 1) {
+                if (b.status > 0) {
                     // ball is hitting a brick
+                    // remember to deduct some pixels so that the outer edge of the ball gets detected when hitting the brick!!
                     if (
                         x > b.x &&
                         x < b.x + brickWidth &&
@@ -72,7 +102,7 @@
                         y < b.y + brickHeight
                     ) {
                         dy = -dy;
-                        b.status = 0;
+                        b.status -= 1;
                         score++;
                     }
                 }
@@ -110,7 +140,7 @@
     function drawBricks() {
         for (let c = 0; c < bColumnTotal; c++) {
             for (let r = 0; r < bRowTotal; r++) {
-                if (bricks[c][r].status == 1) {
+                if (bricks[c][r].status > 0) {
                     let brickX =
                         c * (brickWidth + brickPadding) + brickOffsetLeft;
                     let brickY =
@@ -119,11 +149,21 @@
                     bricks[c][r].y = brickY;
                     ctx.beginPath();
                     ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                    ctx.fillStyle = "crimson";
+                    ctx.fillStyle = setBrickColor(bricks[c][r].status);
                     ctx.fill();
                     ctx.closePath();
                 }
             }
+        }
+    }
+
+    function setBrickColor(statusCount) {
+        if (statusCount === 3) {
+            return "blue";
+        } else if (statusCount === 2) {
+            return "yellow";
+        } else if (statusCount === 1) {
+            return "crimson";
         }
     }
 
@@ -135,9 +175,9 @@
         collisionDetection();
         drawScore();
 
-        if (score == bRowTotal * bColumnTotal) {
+        if (score == winningScore) {
             console.log("WIN!!!!");
-            alert("you just won 🎉");
+            alert("you just won you magnificent creature🎉");
         }
         // check if the ball has reached the side walls
         if (x + dx > canv.width - ballRadius || x + dx < ballRadius) {
@@ -150,14 +190,11 @@
         } else if (y + dy > canv.height - ballRadius - paddleHeight) {
             // check if the paddle is there to bounce the ball back
             if (x >= paddleX - 15 && x <= paddleX + paddleWidth + 15) {
-                console.log("sending ball somewhere else");
                 var randomAngleShift = Math.random() * (0.5 - 0.1 + 1) + 0.1;
-                console.log("randomAngleShift:", randomAngleShift);
                 dy = -dy - randomAngleShift;
                 console.log("dy:", dy);
                 if (dy <= -6) {
                     dy = -3;
-                    console.log("getting mighty fast");
                 }
             } else {
                 alert(`You did not catch the ball at the bottom
