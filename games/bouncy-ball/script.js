@@ -97,9 +97,9 @@
                     // remember to deduct some pixels so that the outer edge of the ball gets detected when hitting the brick!!
                     if (
                         x > b.x &&
-                        x < b.x + brickWidth &&
+                        x < b.x + brickWidth + ballRadius &&
                         y > b.y &&
-                        y < b.y + brickHeight
+                        y < b.y + brickHeight + ballRadius
                     ) {
                         dy = -dy;
                         b.status -= 1;

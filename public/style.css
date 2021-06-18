@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Josefin Slab", serif;
+}
+
+body {
+    background: #fff1d0;
+}
+
+main .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 4.5em;
+}
+
+.card {
+    height: 300px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 2px #07a0c3;
+    background-color: #fbe474;
+}
+
+.card:hover {
+    background-color: #f0c808;
+}
+
+.card img {
+    height: 200px;
+    width: 200px;
+}
+
+a {
+    color: #ee6f6d;
+    text-decoration: none;
+}
+
+a h2 {
+    padding: 10px;
+}
